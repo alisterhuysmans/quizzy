@@ -28,7 +28,7 @@
       </div>
 
       <!-- Bouton "Passer" pour passer à la question suivante -->
-      <button @click="skipQuestion">Passer</button>
+      <button @click="skipQuestion" :disabled="submitted">Passer</button>
 
       <!-- Zone de feedback pour l'utilisateur après chaque réponse -->
       <div v-if="feedbackMessage" class="feedback">{{ feedbackMessage }}</div>
