@@ -9,7 +9,7 @@
   
   <script>
   export default {
-    props: ['score', 'total', 'totalPointsPossible'],
+    props: ['score', 'total', 'totalPointsPossible', 'currentCategoryId'],
   };
   </script>
   
