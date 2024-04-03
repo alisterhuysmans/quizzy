@@ -5,6 +5,7 @@
       <button @click="$emit('changePage', 'quizQuestion', currentCategoryId)">Rejouer</button>
       <button @click="$emit('changePage', 'quizHome')">Choisir une autre catégorie</button>
     </div>
+    <!-- gea -->
   </template>
   
   <script>
@@ -12,4 +13,3 @@
     props: ['score', 'total', 'totalPointsPossible', 'currentCategoryId'],
   };
   </script>
-  
