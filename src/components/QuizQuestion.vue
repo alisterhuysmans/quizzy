@@ -46,10 +46,10 @@ export default {
       currentQuestionIndex: 0,
       score: 0,
       totalPointsPossible: 0,
-      userResponse: '', 
-      feedbackMessage: '', 
-      timeLeft: 30, 
-    timer: null, 
+      userResponse: '',
+      feedbackMessage: '',
+      timeLeft: 30,
+      timer: null,
     };
   },
   computed: {
@@ -61,49 +61,61 @@ export default {
     this.fetchQuestions();
   },
   watch: {
-  currentQuestionIndex(newValue, oldValue) {
-    if (newValue !== oldValue) {
-      this.startCountdown(); 
+    currentQuestionIndex(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.startCountdown();
+      }
     }
-  }
-},
-beforeUnmount() { 
-  if (this.timer) {
-    clearInterval(this.timer); // Nettoie le timer lors de la destruction du composant
-  }
-},
+  },
+  beforeUnmount() {
+    if (this.timer) {
+      clearInterval(this.timer); // Nettoie le timer lors de la destruction du composant
+    }
+  },
   methods: {
     startCountdown() {
-    if (this.timer) {
-      clearInterval(this.timer); // Nettoie le timer précédent si existant
-    }
-    this.timeLeft = 30; // Réinitialise le compte à rebours à 30 secondes
-    this.timer = setInterval(() => {
-      if (this.timeLeft > 0) {
-        this.timeLeft--;
-      } else {
-        this.handleTimeOut(); // Gère le cas où le temps est écoulé
+      if (this.timer) {
+        clearInterval(this.timer); // Nettoie le timer précédent si existant
       }
-    }, 1000);
-  },
+      this.timeLeft = 30; // Réinitialise le compte à rebours à 30 secondes
+      this.timer = setInterval(() => {
+        if (this.timeLeft > 0) {
+          this.timeLeft--;
+        } else {
+          this.handleTimeOut(); // Gère le cas où le temps est écoulé
+        }
+      }, 1000);
+    },
 
-  handleTimeOut() {
-    clearInterval(this.timer);
-    this.feedbackMessage = "Temps écoulé !"; 
-    setTimeout(() => {
-      this.moveToNextQuestion();
-    }, 2000); // Délai pour permettre à l'utilisateur de lire le feedback avant de passer à la prochaine question
-  },
+    handleTimeOut() {
+      clearInterval(this.timer);
+      this.feedbackMessage = "Temps écoulé !";
+      setTimeout(() => {
+        this.moveToNextQuestion();
+      }, 2000); // Délai pour permettre à l'utilisateur de lire le feedback avant de passer à la prochaine question
+    },
+
     fetchQuestions() {
       fetch(`https://quizz-musical-backend.airdev.be/api/questions?category_id=${this.categoryId}`)
         .then(response => response.json())
         .then(data => {
-          this.questions = data;
+          this.questions = this.shuffleArray(data); // Shuffle the fetched questions
           this.calculateTotalPoints();
-          this.startCountdown(); 
+          this.startCountdown();
         })
         .catch(error => console.error('Erreur lors de la récupération des questions:', error));
     },
+
+
+    shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    },
+
+
     calculateTotalPoints() {
       this.totalPointsPossible = this.questions.reduce((total, question) => total + question.points, 0);
 
