@@ -1,12 +1,15 @@
 <template>
   <div class="quiz-home">
-    <h1 v-if="!errorMessage">Choisissez une catégorie</h1>
+    <h2 class="page-title" v-if="!errorMessage">Choisissez une catégorie</h2>
     <div v-if="errorMessage" class="error-message">
-      <p>Il y as eu une erreur.</p>
-      {{ errorMessage }}</div>
+      <p>Connection perdue avec l'API.</p>
+      {{ errorMessage }}
+    </div>
     <div v-else>
-      <div v-for="category in categories" :key="category.id">
-        <button @click="selectCategory(category.id)">{{ category.title }}</button>
+      <div class="cat-container">
+        <div v-for="category in categories" :key="category.id">
+          <button class="btn btn-primary" @click="selectCategory(category.id)">{{ category.title }}</button>
+        </div>
       </div>
     </div>
   </div>
@@ -49,8 +52,15 @@ export default {
 </script>
 
 <style>
+.page-title {
+    padding-bottom: 2rem;
+}
+
+.cat-container {
+    display: flex;
+    gap: 1rem;
+    
 .error-message {
-  color: red;
-  font-weight: bold;
+  color: var(--text-color);
 }
 </style>
