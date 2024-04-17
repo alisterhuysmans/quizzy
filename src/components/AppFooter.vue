@@ -18,6 +18,7 @@ export default {
 <style>
 /* Add your footer styles here */
 footer {
+    font-size: 1.4rem;
     background-color: var(--background-color);
     color: var(--background-color-2);
     padding: 10px;
