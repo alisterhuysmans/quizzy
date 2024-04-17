@@ -14,9 +14,14 @@
             <!-- Gère l'affichage pour les questions 'Blind test' avec un extrait audio -->
             <div v-if="currentQuestion.category_id === 2">
                 <audio
+                    ref="audioPlayer"
                     controls
                     :src="currentQuestion.content.sound_url"
+                    v-if="isAudioPlaying"
                 ></audio>
+                <p v-if="!isAudioPlaying && audioCountdown > 0">
+                    Commence dans {{ audioCountdown }}
+                </p>
                 <!-- Affiche les options de réponse si présentes -->
                 <div
                     class="audio-choices-container"
@@ -91,6 +96,8 @@ export default {
             userResponse: "",
             feedbackMessage: "",
             timeLeft: 30,
+            audioCountdown: 3,
+            isAudioPlaying: false,
             timer: null,
             submitted: false, // Flag to track whether an answer has been submitted
         };
@@ -107,11 +114,13 @@ export default {
     },
     mounted() {
         this.fetchQuestions();
+        this.startAudioCountdown();
     },
     watch: {
         currentQuestionIndex(newValue, oldValue) {
             if (newValue !== oldValue) {
                 this.startCountdown();
+                this.startAudioCountdown();
             }
         },
     },
@@ -121,6 +130,31 @@ export default {
         }
     },
     methods: {
+        startAudioCountdown() {
+            this.audioCountdown = 3;
+            this.isAudioPlaying = false;
+            let interval = setInterval(() => {
+                if (this.audioCountdown > 1) {
+                    this.audioCountdown -= 1;
+                } else {
+                    clearInterval(interval);
+                    this.playAudio();
+                }
+            }, 1000);
+        },
+        playAudio() {
+            this.isAudioPlaying = true;
+            this.$nextTick(() => {
+                const audioPlayer = this.$refs.audioPlayer;
+                if (audioPlayer) {
+                    audioPlayer.play().catch((e) => {
+                        console.error("Error playing audio:", e);
+                        // Gérer ici les erreurs de lecture, comme le non-respect des politiques de lecture automatique
+                    });
+                }
+            });
+        },
+
         startCountdown() {
             if (this.timer) {
                 clearInterval(this.timer); // Nettoie le timer précédent si existant
