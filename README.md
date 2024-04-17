@@ -29,6 +29,7 @@ https://quizz-musical-backend.airdev.be/api
 Todo
 - randomize order of questions
 - set blind test timer based on audio duration
+- set autoplay to the audio
 - implement pagination of questions
 - implement "pass" button
 - add style to quizzy
